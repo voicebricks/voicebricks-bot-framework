@@ -1,7 +1,6 @@
 {
-  "name": "voicebricks-bot-framework",
+  "name": "@voicebricks/voicebricks-bot-framework",
   "version": "0.0.0",
-  "private": true,
   "scripts": {
     "build": "node ./generator"
   },
@@ -11,5 +10,32 @@
     "debug": "~2.6.9",
     "uuid": "^3.2.1",
     "zip-folder": "^1.0.0"
-  }
+  },
+  "description": "Bot framework for voice apps",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wiki-wolters/voicebricks-bot-framework.git"
+  },
+  "keywords": [
+    "voicebricks",
+    "bot",
+    "framework",
+    "google",
+    "home",
+    "assistant",
+    "amazon",
+    "alexa",
+    "voice",
+    "app"
+  ],
+  "author": "Lance Wolters",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wiki-wolters/voicebricks-bot-framework/issues"
+  },
+  "homepage": "https://github.com/wiki-wolters/voicebricks-bot-framework#readme"
 }
