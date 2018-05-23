@@ -2,7 +2,7 @@ const fs = require('fs');
 const readJson = require('../json-reader');
 
 const exportDir = process.cwd()+'/exports/alexa';
-const templatesDir = process.cwd()+'/config/lib/templates';
+const templatesDir = __dirname+'/../templates';
 
 module.exports = config => {
     var writeJson = readJson(templatesDir+'/alexa.json');
@@ -14,6 +14,20 @@ module.exports = config => {
             name: intent.name,
             samples: intent.samples || [],
             slots: []
+        })
+    });
+
+    config.alexa.entities.forEach(entity => {
+        writeJson.interactionModel.languageModel.types.push({
+            name: entity.name,
+            values: entity.values.map(arr => {
+                return {
+                    name: {
+                        value: arr[0],
+                        synonyms: arr.slice(1)
+                    }
+                };
+            })
         })
     });
 

@@ -1,8 +1,10 @@
 const fs = require('fs');
+const { processArray } = require('./lib/split');
 
-const dirIntents = process.cwd()+'config/intents';
+const dirIntents = process.cwd()+'/config/intents';
+const dirEntities = process.cwd()+'/config/entities';
 
-var config = require(process.cwd()+'config/main');
+var config = require(process.cwd()+'/config/main');
 
 var entities = [];
 
@@ -34,14 +36,44 @@ const getIntents = () => {
     })
 };
 
+//load entities
+const getEntities = () => {
+    var entities = [];
+    return new Promise((resolve, reject) => {
+        fs.readdir(dirEntities, (err, files) => {
+            if (err) {
+                reject(err);
+            } else {
+                files.forEach(fileName => {
+                    try {
+                        const entity = JSON.parse(fs.readFileSync(dirEntities + '/' + fileName, 'utf8'));
+                        entities.push(entity);
+                    } catch (err) {
+                        reject('Could not parse JSON for entity ' + fileName + ': ' + err.message);
+                    }
+                });
+            }
+            resolve(entities);
+        });
+    })
+};
+
 getIntents().then(intents => {
     ['google', 'alexa'].forEach(key => {
         config[key].intents = intents.map(intent => {
             let copy = Object.assign({}, intent);
             delete copy.google;
             delete copy.alexa;
+            copy.samples && (copy.samples = processArray(copy.samples));
+
             return Object.assign(copy, intent[key] || {});
         });
+    });
+
+    return getEntities();
+}).then(entities => {
+    ['google', 'alexa'].forEach(key => {
+        config[key].entities = entities;
 
         require('./lib/exporters/'+key)(config);
     });
