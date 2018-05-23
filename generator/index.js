@@ -1,8 +1,8 @@
 const fs = require('fs');
 
-const dirIntents = process.cwd()+'/config/intents';
+const dirIntents = process.cwd()+'config/intents';
 
-var config = require(process.cwd()+'/config/main');
+var config = require(process.cwd()+'config/main');
 
 var entities = [];
 
