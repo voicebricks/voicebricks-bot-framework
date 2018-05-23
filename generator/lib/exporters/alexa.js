@@ -2,7 +2,7 @@ const fs = require('fs');
 const readJson = require('../json-reader');
 
 const exportDir = process.cwd()+'/exports/alexa';
-const templatesDir = process.cwd()+'/config/lib/templates';
+const templatesDir = __dirname+'/../templates';
 
 module.exports = config => {
     var writeJson = readJson(templatesDir+'/alexa.json');

@@ -6,7 +6,7 @@ const readJson = require('../json-reader');
 const exportDir = process.cwd()+'/exports';
 const buildDir = exportDir + '/google/build';
 const intentsDir = exportDir + '/google/build/intents';
-const templatesDir = process.cwd()+'/config/lib/templates';
+const templatesDir = __dirname+'/../templates';
 
 console.log('Export directory:', exportDir);
 

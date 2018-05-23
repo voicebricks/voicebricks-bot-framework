@@ -5,8 +5,8 @@ const Alexa = require('alexa-sdk');
 const responseWrapper = require('./lib/response-context-wrapper');
 
 class Bot {
-    constructor() {
-        console.log(process.cwd()+'/handlers');
+    constructor(config) {
+        this.config = config;
         this.handlers = Object.assign({
                 Unknown: function() {
                     this.ask('What?');
@@ -24,9 +24,7 @@ class Bot {
     }
 
     startSession(agent) {
-        const session = new Session(this, agent, {
-            appName: 'Voice Bricks Prototype'
-        });
+        const session = new Session(this, agent, this.config);
 
         return session.toIntent();
     }
@@ -57,6 +55,6 @@ class Bot {
     }
 }
 
-const bot = new Bot();
-
-module.exports = bot;
+module.exports = config => {
+    return new Bot(config);
+};
