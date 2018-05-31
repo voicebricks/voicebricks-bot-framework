@@ -59,6 +59,10 @@ module.exports = config => {
     //write the intents
     config.google.intents.forEach(intent => {
         let writeIntent = Object.assign({}, readJson(templatesDir+'/intent.json'));
+
+        /*
+         * User says samples
+         */
         let aUserSays = [];
         if (Array.isArray(intent.samples)) {
             intent.samples.forEach(text => {
@@ -67,7 +71,8 @@ module.exports = config => {
                 userSays.updated = Date.now();
 
                 //data is split by slots
-                text.split(/\{|\}/).forEach((section, i) => {
+                let sections = text.split(/\{|\}/);
+                sections.forEach((section, i) => {
                     if (!section) return;
 
                     let values = entities[section];
@@ -76,13 +81,32 @@ module.exports = config => {
                         //text
                         data.text = section;
                     } else {
+                        const parameter = intent.parameters[section];
+                        const type = typeof parameter === 'string' ? parameter : (parameter || {}).type;
+
                         //slot
-                        data.text = values[Math.floor(Math.random() * values.length)][0];
-                        data.meta = '@'+section;
                         data.alias = section;
+                        if (values) {
+                            //custom entity
+                            data.text = values[Math.floor(Math.random() * values.length)][0];
+                            data.meta = '@' + section;
+                        } else if (parameter) {
+                            //system entity
+                            switch (type) {
+                                case 'number-integer':
+                                    data.text = Math.ceil(Math.random(9));
+                                    data.meta = '@sys.number-integer';
+                            }
+                        }
+
+                        if (!data.meta) {
+                            throw new Error('Entity type is not defined for ' + section);
+                        }
                     }
                     userSays.data.push(data);
                 });
+
+                userSays.count = Math.max((sections.length - 1) / 2 - 1, 0);
 
                 aUserSays.push(userSays);
             })
@@ -90,6 +114,24 @@ module.exports = config => {
         if (aUserSays.length) {
             fs.writeFileSync(intentsDir+'/'+intent.name+'_usersays_en.json', JSON.stringify(aUserSays, null, 2));
         }
+
+        /*
+         * Parameters
+         */
+        for(var paramName in intent.parameters){
+            let param = intent.parameters[paramName];
+            let type = typeof param === 'string' ? param : (param || {}).type;
+
+            writeIntent.responses[0].parameters.push({
+                "id": uuidv4(),
+                "required": false,
+                "dataType": '@' + (entities[type] ? type : 'sys.' + type),
+                "name": paramName,
+                "value": "$"+paramName,
+                "isList": false
+            })
+        }
+
         writeIntent.id = uuidv4();
         writeIntent.name = intent.name;
         writeIntent.events = intent.event ? [{name: intent.event}] : [];
