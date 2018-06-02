@@ -2,6 +2,9 @@ const Session = require('./lib/session');
 const debug = require('debug')('bot');
 const { dialogflow } = require('actions-on-google');
 const Alexa = require('alexa-sdk');
+
+const AlexaAgent = require('./lib/agents/alexa');
+const GoogleAgent = require('./lib/agents/google');
 const responseWrapper = require('./lib/response-context-wrapper');
 
 class Bot {
@@ -33,10 +36,9 @@ class Bot {
         return (req, res) => {
             try {
                 if (req.isGoogle) {
-                    const dialogflowApp = dialogflow({debug: false});
+                    const dialogflowApp = dialogflow({debug: Boolean(this.config.debug)});
                     dialogflowApp.fallback(conv => {
                         console.log('Dialogflow args', arguments);
-                        const GoogleAgent = require('./lib/agents/google');
                         return this.startSession(new GoogleAgent(conv));
                     });
                     dialogflowApp(req, responseWrapper(res));

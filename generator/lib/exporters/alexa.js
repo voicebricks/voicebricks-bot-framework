@@ -10,10 +10,27 @@ module.exports = config => {
 
     config.alexa.intents.forEach(intent => {
         if (!intent.name) return;
+
+        let slots = [];
+        for (const param in intent.parameters || {}) {
+            let type = intent.parameters[param];
+
+            switch (type) {
+                case 'number-integer':
+                    type = 'AMAZON.NUMBER';
+                    break;
+            }
+
+            slots.push({
+                name: param,
+                type: type
+            });
+        }
+
         writeJson.interactionModel.languageModel.intents.push({
             name: intent.name,
             samples: intent.samples || [],
-            slots: []
+            slots: slots
         })
     });
 
