@@ -17,6 +17,7 @@ class Bot {
             },
             require(process.cwd()+'/handlers')
         );
+        this.db = config.db;
     }
 
     middleware() {

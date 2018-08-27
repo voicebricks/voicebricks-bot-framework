@@ -1,4 +1,4 @@
-{
+ {
   "name": "@voicebricks/voicebricks-bot-framework",
   "version": "0.0.2",
   "scripts": {
@@ -9,6 +9,7 @@
     "alexa-sdk": "^1.0.25",
     "aws-serverless-express": "^3.2.0",
     "debug": "~2.6.9",
+    "mongoose": "^5.2.5",
     "uuid": "^3.2.1",
     "zip-folder": "^1.0.0"
   },
