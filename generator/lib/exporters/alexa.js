@@ -23,7 +23,7 @@ module.exports = config => {
 
             slots.push({
                 name: param,
-                type: type
+                type: typeof type === 'string' ? type : type.type
             });
         }
 
