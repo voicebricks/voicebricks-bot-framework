@@ -27,7 +27,7 @@ module.exports = config => {
     var agent = readJson(templatesDir+'/agent.json');
     agent.googleAssistant.project = config.google.project;
     agent.googleAssistant.voiceType = config.google.voiceType;
-    agent.webhook.url = config.fulfillmentUrl;
+    agent.webhook.url = config.fulfillmentUrl+'/bot/google';
     fs.writeFileSync(buildDir+'/agent.json', JSON.stringify(agent, null, 2));
 
     var package = readJson(templatesDir+'/package.json');

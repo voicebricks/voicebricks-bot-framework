@@ -1,14 +1,16 @@
- {
+{
   "name": "@voicebricks/voicebricks-bot-framework",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "scripts": {
     "build": "node ./generator"
   },
   "dependencies": {
     "actions-on-google": "^2.1.1",
     "alexa-sdk": "^1.0.25",
+    "alexa-verifier-middleware": "^1.0.1",
     "aws-serverless-express": "^3.3.5",
     "debug": "~2.6.9",
+    "express": "^4.16.3",
     "mongoose": "^5.2.12",
     "uuid": "^3.2.1",
     "zip-folder": "^1.0.0"

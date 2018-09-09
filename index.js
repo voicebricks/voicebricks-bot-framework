@@ -22,7 +22,7 @@ class Bot {
 
     middleware() {
         return (req, res, next) => {
-            req.isGoogle = Boolean(req.body.queryResult);
+            //nothing here yet
             next();
         }
     }
