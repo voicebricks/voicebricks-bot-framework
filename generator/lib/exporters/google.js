@@ -75,7 +75,6 @@ module.exports = config => {
                 sections.forEach((section, i) => {
                     if (!section) return;
 
-                    let values = entities[section];
                     let data = {userDefined: false};
                     if (i % 2 === 0) {
                         //text
@@ -83,6 +82,7 @@ module.exports = config => {
                     } else {
                         const parameter = intent.parameters[section];
                         const type = typeof parameter === 'string' ? parameter : (parameter || {}).type;
+                        const values = entities[type];
 
                         //slot
                         data.alias = section;
@@ -100,7 +100,7 @@ module.exports = config => {
                         }
 
                         if (!data.meta) {
-                            throw new Error('Entity type is not defined for ' + section);
+                            throw new Error('Entity type is not defined for ' + type);
                         }
                     }
                     userSays.data.push(data);
