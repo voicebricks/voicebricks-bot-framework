@@ -1,13 +1,7 @@
-var path = require('path');
 var express = require('express');
+var bot = require('../lib/bot');
 var router = express.Router();
 var mongo = require('../lib/db/mongo');
-var config = require(path.join(process.cwd(), 'config/main')) || {appName: 'App Name not defined'};
-
-const bot = require('../index')({
-    appName: config.appName,
-    debug: true
-});
 
 router.use(mongo.connectMiddleware(bot));
 router.use(bot.middleware());

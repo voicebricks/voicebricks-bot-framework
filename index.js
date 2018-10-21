@@ -18,26 +18,38 @@ class Bot {
             require(process.cwd()+'/handlers')
         );
         this.db = config.db;
+        this.middlewareFuncs = [];
+    }
+
+    addMiddleware(func) {
+        this.middlewareFuncs.push(func);
     }
 
     middleware() {
         return (req, res, next) => {
-            //nothing here yet
-            next();
+            let stack = [next];
+            for (let i = this.middlewareFuncs.length - 1; i >= 0 ; i--) {
+                ((next, func) => {
+                    stack.push(() => {
+                        func.call(this, req, res, next)
+                    })
+                })(stack[stack.length - 1], this.middlewareFuncs[i])
+            }
+            stack[stack.length - 1]();
         }
     }
 
     startSession(agent) {
         const session = new Session(this, agent, this.config);
 
-        return session.toIntent();
+        return session.init().then(() => session.toIntent());
     }
 
     listen() {
         return (req, res) => {
             try {
                 if (req.isGoogle) {
-                    const dialogflowApp = dialogflow({debug: Boolean(this.config.debug)});
+                    const dialogflowApp = dialogflow({debug: /*Boolean(this.config.debug)*/false});
                     dialogflowApp.fallback(conv => {
                         console.log('Dialogflow args', arguments);
                         return this.startSession(new GoogleAgent(conv));
