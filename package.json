@@ -11,6 +11,7 @@
     "alexa-verifier-middleware": "^1.0.1",
     "aws-serverless-express": "^3.3.5",
     "debug": "~2.6.9",
+    "dialogflow": "^0.7.0",
     "express": "^4.16.3",
     "mongoose": "^5.2.12",
     "uuid": "^3.2.1",

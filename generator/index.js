@@ -1,5 +1,7 @@
 const fs = require('fs');
 const { processArray } = require('./lib/split');
+const jsonRegex = /\.json$/;
+const jsRegex = /\.js$/;
 
 const dirIntents = process.cwd()+'/config/intents';
 const dirEntities = process.cwd()+'/config/entities';
@@ -45,11 +47,16 @@ const getEntities = () => {
                 reject(err);
             } else {
                 files.forEach(fileName => {
-                    try {
+                    if (jsonRegex.test(fileName)) {
+                      try {
                         const entity = JSON.parse(fs.readFileSync(dirEntities + '/' + fileName, 'utf8'));
                         entities.push(entity);
-                    } catch (err) {
+                      } catch (err) {
                         reject('Could not parse JSON for entity ' + fileName + ': ' + err.message);
+                      }
+                    } else if (jsRegex.test(fileName)) {
+                      const entity = require(dirEntities + '/' + fileName);
+                      entity && entities.push(entity);
                     }
                 });
             }
