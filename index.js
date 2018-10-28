@@ -51,7 +51,6 @@ class Bot {
                 if (req.isGoogle) {
                     const dialogflowApp = dialogflow({debug: /*Boolean(this.config.debug)*/false});
                     dialogflowApp.fallback(conv => {
-                        console.log('Dialogflow args', arguments);
                         return this.startSession(new GoogleAgent(conv));
                     });
                     dialogflowApp(req, responseWrapper(res));
