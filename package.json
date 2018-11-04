@@ -1,6 +1,6 @@
 {
   "name": "@voicebricks/voicebricks-bot-framework",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "scripts": {
     "build": "node ./generator"
   },
