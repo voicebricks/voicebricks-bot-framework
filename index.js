@@ -7,18 +7,58 @@ const AlexaAgent = require('./lib/agents/alexa');
 const GoogleAgent = require('./lib/agents/google');
 const responseWrapper = require('./lib/response-context-wrapper');
 
+// Bind arguments starting after however many are passed in.
+function bind_trailing_args(fn, ...bound_args) {
+  return function(...args) {
+    return fn(...args, ...bound_args);
+  };
+}
+
 class Bot {
     constructor(config) {
         this.config = config;
-        this.handlers = Object.assign({
-                Unknown: function() {
-                    this.ask('What?');
-                }
-            },
-            require(process.cwd()+'/handlers')
-        );
+        const handlers = require(process.cwd()+'/handlers');
+
+        this.handlers = this.combineHandlers({
+            Unknown: function() {
+                this.ask('I don\'t understand.');
+            }
+        }, handlers);
+
         this.db = config.db;
         this.middlewareFuncs = [];
+    }
+
+    combineHandlers() {
+        let handlers = [];
+        [].forEach.call(arguments, arg => {
+          if (Array.isArray(arg)) {
+            handlers = handlers.concat(arg);
+          } else {
+            handlers.push(arg);
+          }
+        });
+
+        let ret = {};
+        handlers.forEach(handler => {
+            for (let key in handler) {
+                if (key === '_Middleware' && ret._Middleware) {
+                    let prevMiddleware = ret._Middleware;
+                    let newMiddleware = handler[key];
+
+                    //new middleware should call prev middleware as next fn
+                    console.log('Merging middleware');
+                    ret._Middleware = function(intent, next) {
+                      return newMiddleware.call(this, intent, prevMiddleware.bind(this, intent, next))
+                    }
+                } else {
+                    ret[key] && key !== 'Unknown' && console.warn('Duplicate handler for intent '+key+'. Overwriting.');
+                    ret[key] = handler[key];
+                }
+            }
+        })
+
+      return ret;
     }
 
     addMiddleware(func) {
