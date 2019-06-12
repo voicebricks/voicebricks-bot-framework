@@ -1,6 +1,8 @@
 # voicebricks-bot-framework
 Bot framework for voice apps, developed to work with both Amazon Alexa and Actions on Google/Google Assistant.
 
+It is recommended to use this repository through the template: https://github.com/voicebricks/voicebricks-template
+
 This framework was originally built to address deficiencies in the [Jovo framework](https://www.jovo.tech/), which at the time included:
 1. No async behaviours were possible, such as making an API request or accessing a database during a conversation. Jovo now supports this.
 2. Shallow dialog designs, limited to 2 levels. Jovo has now clarified that there is no limit to the number of levels in a dialog.
