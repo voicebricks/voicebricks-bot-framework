@@ -2,7 +2,12 @@
   "interactionModel": {
     "languageModel": {
       "invocationName": "",
-      "intents": [],
+      "intents": [
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        }
+      ],
       "types": []
     }
   }

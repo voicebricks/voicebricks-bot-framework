@@ -148,6 +148,11 @@ module.exports = config => {
   zipFolder(buildDir, exportDir + '/google/agent.zip', err => {
     if (err) console.error(err);
     else {
+      if (!config.google.project) {
+        console.error('Please enter the google project into the main config file.');
+        return;
+      }
+
       try {
         const googleCreds = JSON.parse(fs.readFileSync(credentialsDir + '/google.json', 'utf8'));
 
@@ -157,7 +162,7 @@ module.exports = config => {
             private_key: googleCreds.private_key
           }
         });
-        const formattedParent = client.projectPath('cocktailmate-58c1c');
+        const formattedParent = client.projectPath(config.google.project);
 
         //import zip
         client.importAgent({
@@ -178,7 +183,7 @@ module.exports = config => {
           console.error(err);
         })
       } catch (err) {
-        reject('Could not find or parse google credentials file at credentials/google.json');
+        console.error('Could not find or parse google credentials file at credentials/google.json');
       }
     }
   });
